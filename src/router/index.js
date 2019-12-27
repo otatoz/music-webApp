@@ -28,6 +28,11 @@ const routes = [
     component:()=> import('../views/login/PasswordLogin')
   },
   {
+    path:'/playList',
+    name:'playList',
+    component:()=> import('../views/music/PlayList')
+  },
+  {
     path:'/home',
     name:'home',
     component:()=> import('../views/music/HomePage'),

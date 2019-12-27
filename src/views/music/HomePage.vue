@@ -44,30 +44,11 @@
                 <van-button round plain hairline type="info">歌单广场</van-button>
             </div>
             <div class="recommendedList">
-                <ul>
-                    <li>
-                        <img src="../../assets/logo.png" alt="">
-                        <div>ceshi1</div>
-                    </li>
-                    <li>
-                        <img src="../../assets/logo.png" alt="">
-                        <div>ceshi1</div>
-                    </li>
-                    <li>
-                        <img src="../../assets/logo.png" alt="">
-                        <div>ceshi1</div>
-                    </li>
-                    <li>
-                        <img src="../../assets/logo.png" alt="">
-                        <div>ceshi1</div>
-                    </li>
-                    <li>
-                        <img src="../../assets/logo.png" alt="">
-                        <div>ceshi1</div>
-                    </li>
-                    <li>
-                        <img src="../../assets/logo.png" alt="">
-                        <div>ceshi1</div>
+                <ul v-for="item in playList" :key="item.id">
+                    <li class="recommendedItem" @click="toPlayList(item.id)">
+                        <div class="playC">{{item.playCount | playFilter}}</div>
+                        <img :src="item.coverImgUrl" alt="">
+                        <div class="recommendedListName" :title="item.name">{{item.name}}</div>
                     </li>
                 </ul>
             </div>
@@ -84,7 +65,7 @@
       </van-tab>
     </van-tabs>
 
-    <!-- 左侧登录界面 -->
+    <!-- 左侧个人详情界面 -->
     <van-popup
       v-model="show"
       position="left"
@@ -107,7 +88,7 @@
 </template>
 
 <script>
-import {mapActios,mapState} from 'vuex'
+import {mapActions,mapState} from 'vuex'
 export default {
   data(){
     return {
@@ -125,35 +106,73 @@ export default {
       active: 2
     }
   },
+  created(){
+    this.findPlayList()
+  },
   computed:{
       ...mapState('login',['info']),
+      ...mapState('home',['playList'])
   },
   methods:{
+    ...mapActions('home',['findPlayList']),
     showModel(){
       this.show = true
     },
-    toLogin(){
+    toPlayList(id){
       this.$router.push({
-        path:'/login/login'
+        path:'/playList',
+        query:{id}
       })
+    }
+  },
+  // 处理播放量格式
+  filters:{
+    playFilter:function(playCo){
+      if(playCo > 10000){
+        var count = parseInt(playCo/10000) + '万'
+        return count 
+      }
+      if(playCo < 10000){
+        var count = parseInt(playCo/1000) + '千'
+        return count
+      }
+      
     }
   }
 }
 </script>
 <style scoped>
+  .playC{
+    position: absolute;
+    right: 5%;
+    top: 3%;
+    color: white;
+  }
+  .recommendedItem{
+    position: relative;
+  }
+  .recommendedListName{
+    width: 100px;
+    height: 40px;
+
+    /* 超出部分以点的形式显示 */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    /* 行数 */
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
   .recommendedList ul li{
       float: left;
       height: 160px;
-      margin-right: 20px;
+      margin-right: 5px;
   }
   .recommendedList ul li:first-child{
       margin-left: 15px;
   }
   .recommendedList ul li img{
       height: 100px;
-  }
-  .recommendedList ul li div{
-      height: 18px;
   }
   .recommendedSongTop *{
       display: inline-block;
