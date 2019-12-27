@@ -1,5 +1,7 @@
-# cloudmusic
-登录手机号是个人网易云的账号
+# cloudmusic（请先登录）
+```
+登录所用的手机号是个人网易云的账号
+```
 ## Project setup
 ```
 yarn install
